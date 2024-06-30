@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(white,skyblue);
+            margin: 0;
+        }
+        nav {
+            width: 100%;
+            background-color: skyblue;
+            padding: 10px 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .container {
+            width: 600px;
+            padding: 40px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color:skyblue;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .result div {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Dictionary</div>
+        <div>
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Feedback</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <input type="text" id="wordInput" placeholder="Enter a word">
+        <button onclick="getMeaning()">Get Meaning</button>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function getMeaning() {
+            const word = document.getElementById('wordInput').value;
+            const resultDiv = document.getElementById('result');
+            const apiKey = 'jI/7yFU/UojHygbIm4znDA==XkHz3dUyMEJcupoS';
+            const apiUrl = `https://api.api-ninjas.com/v1/dictionary?word=${word}`;
+
+            fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'X-Api-Key': apiKey
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.innerHTML = ''; // Clear previous results
+                if (data.definition) {
+                    const definitions = data.definition.split('. ');
+                    const limitedDefinitions = definitions.slice(0, 3); // Limit to 3-4 meanings
+                    limitedDefinitions.forEach(def => {
+                        const div = document.createElement('div');
+                        div.textContent = def;
+                        resultDiv.appendChild(div);
+                    });
+                } else {
+                    resultDiv.textContent = 'No definition found.';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching definition:', error);
+                resultDiv.textContent = 'Error fetching definition.';
+            });
+        }
+    </script>
+</body>
+</html>

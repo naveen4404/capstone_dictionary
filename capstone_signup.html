@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Sign Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background:linear-gradient(white,skyblue);
+        }
+        .container {
+            width: 400px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: skyblue;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>401 CAPSTONE PROJECT</h1>
+        <h2>Sign Up</h2>
+        <input type="email" id="signUpEmail" placeholder="Email" autocomplete="off">
+        <input type="password" id="signUpPassword" placeholder="Password">
+        <button onclick="signUp()">Sign Up</button>
+        <div id="signUpError" class="error"></div>
+
+        <h2>Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email" autocomplete="off">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <div id="loginError" class="error"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBl4I4o5JmwVtejooUV0bCNq8o9ECtVe78",
+            authDomain: "login-d8a94.firebaseapp.com",
+            projectId: "login-d8a94",
+            storageBucket: "login-d8a94.appspot.com",
+            messagingSenderId: "247819954596",
+            appId: "1:247819954596:web:57e34dcb88ad0792707931",
+            measurementId: "G-PQYD6FTB8Y"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.signUp = function() {
+            const email = document.getElementById('signUpEmail').value;
+            const password = document.getElementById('signUpPassword').value;
+            const errorDiv = document.getElementById('signUpError');
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    errorDiv.textContent = '';
+                    console.log('User signed up:', user);
+                    alert('Sign up successful!');
+                    window.location.href = 'dashboard.html';
+                })
+                .catch((error) => {
+                    console.log('Sign up error:', error);
+                    errorDiv.textContent = error.message;
+                });
+        };
+
+        window.login = function() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    errorDiv.textContent = '';
+                    console.log('User logged in:', user);
+                    alert('Login successful!');
+                    window.location.href = 'capstone_dashboard.html';
+                })
+                .catch((error) => {
+                    console.log('Login error:', error);
+                    errorDiv.textContent = error.message;
+                });
+        };
+    </script>
+</body>
+</html>
